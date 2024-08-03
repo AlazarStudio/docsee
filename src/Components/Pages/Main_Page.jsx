@@ -1,11 +1,14 @@
 import React from "react";
+import GenerateDocument from "../Blocks/GenerateDocument/GenerateDocument";
 
 function Main_Page({ children, ...props }) {
-    return ( 
+    return (
         <>
-            Main
+            <div className="App">
+                <GenerateDocument />
+            </div>
         </>
-     );
+    );
 }
 
 export default Main_Page;
