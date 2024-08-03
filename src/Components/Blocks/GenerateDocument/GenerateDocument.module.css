@@ -1,32 +1,39 @@
-.main{
-    padding: 20px;
-}
-.formData{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 40px;
-}
-
-.formData_elem{
-    width: 200px;
+.main {
+    padding: 40px 20px 20px 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 40px;
 }
 
-.formData_elem input{
-    width: 100%;
-    outline: none;
-    height: 30px;
-    padding: 0 10px;
+.list {
+    display: flex;
+    justify-content: space-between;
 }
 
-button{
-    width: 200px;
-    height: 40px;
-    outline: none;
+.list_left {
+    display: flex;
+    flex-direction: column;
+}
+
+.list_left_ip {
+    height: 50px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    margin-top: 40px;
+    transition: all 0.3s ease-in-out;
+    width: 500px;
+    border-radius: 10px;
+}
+
+.list_left_ip:hover {
+    background-color: #fff;
+    padding: 0 20px;
+}
+
+.list_right{
+    width: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    display: none;
 }

@@ -1,0 +1,32 @@
+.header {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.header_logo{
+    height: 50px;
+}
+
+.header_logo img{
+    height: 100%;
+}
+
+.header_items{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.header_items_link{
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    color: #000;
+}
+
+.header_items_link:hover{
+    border-bottom: 1px solid #000;
+}
