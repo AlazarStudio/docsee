@@ -27,6 +27,7 @@
     color: #000;
 }
 
-.header_items_link:hover{
+.header_items_link:hover,
+.header_items_link_active{
     border-bottom: 1px solid #000;
 }
