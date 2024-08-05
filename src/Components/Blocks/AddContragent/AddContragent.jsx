@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from './AddContragent.module.css';
 
 const AddContragent = () => {
@@ -8,7 +8,7 @@ const AddContragent = () => {
     const [nazvanieContr, setNazvanieContr] = useState('');
     const [polnoeNazvanieContr, setPolnoeNazvanieContr] = useState('');
     const [socrNazvanieContr, setSocrNazvanieContr] = useState('');
-    const [osnovanieContr, setOsnovanieContr] = useState('');
+    const [osnovanieContr, setOsnovanieContr] = useState('Устава');
     const [pechatContr, setPechatContr] = useState(false);
     const [dolzhnostContr, setDolzhnostContr] = useState('');
     const [fioContr, setFioContr] = useState('');
@@ -33,6 +33,7 @@ const AddContragent = () => {
     const [okoguContr, setOkoguContr] = useState('');
     const [emailContr, setEmailContr] = useState('');
     const [telContr, setTelContr] = useState('');
+    const [genderContr, setGenderContr] = useState('Мужской');
 
     const [isAddContrModalOpen, setIsAddContrModalOpen] = useState(false);
 
@@ -42,11 +43,22 @@ const AddContragent = () => {
 
     const handleAddContr = () => {
         if (polnoeNazvanieContr) {
+            let osnovanieText = osnovanieContr;
+            if (osnovanieContr === 'ИП') {
+                osnovanieText = 'ОГРНИП';
+            } else if (osnovanieContr === 'Самозанятый') {
+                osnovanieText = genderContr === 'Мужской'
+                    ? 'зарегистрирован в ФНС в качестве налогоплательщика налога на профессиональный доход в соответствии с ФЗ от 27.11.2018 №422-ФЗ'
+                    : 'зарегистрирована в ФНС в качестве налогоплательщика налога на профессиональный доход в соответствии с ФЗ от 27.11.2018 №422-ФЗ';
+            } else if (osnovanieContr === 'Устав') {
+                osnovanieText = 'Устава';
+            }
+
             const newContr = {
-                nazvanieContr,
+                // nazvanieContr,
                 polnoeNazvanieContr,
                 ...(socrNazvanieContr && { socrNazvanieContr }),
-                ...(osnovanieContr && { osnovanieContr }),
+                ...(osnovanieText && { osnovanieContr: osnovanieText }),
                 ...(pechatContr && { pechatContr: "М.П." }),
                 ...(dolzhnostContr && { dolzhnostContr }),
                 ...(fioContr && { fioContr }),
@@ -71,6 +83,7 @@ const AddContragent = () => {
                 ...(okoguContr && { okoguContr }),
                 ...(emailContr && { emailContr }),
                 ...(telContr && { telContr }),
+                ...(genderContr && { genderContr }),
             };
             setContrData([...contrData, newContr]);
             setNazvanieContr('');
@@ -101,9 +114,18 @@ const AddContragent = () => {
             setOkoguContr('');
             setEmailContr('');
             setTelContr('');
+            setGenderContr('');
             setIsAddContrModalOpen(false);
         }
     };
+
+    
+    useEffect(() => {
+        fetch('../../../../contragents.json')
+            .then(response => response.json())
+            .then(data => setContrData(data))
+            .catch(error => console.error('Error fetching IP data:', error));
+    }, []);
 
     return (
         <div className={classes.main}>
@@ -130,7 +152,7 @@ const AddContragent = () => {
                         <div key={contr.polnoeNazvanieContr}>
                             <h3>{contr.polnoeNazvanieContr}</h3>
                             <div className={classes.bank_details}>
-                                {contr.nazvanieContr && <p><strong>Название контрагента:</strong> {contr.nazvanieContr}</p>}
+                                {/* {contr.nazvanieContr && <p><strong>Название контрагента:</strong> {contr.nazvanieContr}</p>} */}
                                 {contr.polnoeNazvanieContr && <p><strong>Полное наименование:</strong> {contr.polnoeNazvanieContr}</p>}
                                 {contr.socrNazvanieContr && <p><strong>Сокращенное наименование:</strong> {contr.socrNazvanieContr}</p>}
                                 {contr.osnovanieContr && <p><strong>Действует на основании:</strong> {contr.osnovanieContr}</p>}
@@ -158,6 +180,7 @@ const AddContragent = () => {
                                 {contr.okoguContr && <p><strong>ОКОГУ:</strong> {contr.okoguContr}</p>}
                                 {contr.emailContr && <p><strong>E-mail:</strong> {contr.emailContr}</p>}
                                 {contr.telContr && <p><strong>Телефон:</strong> {contr.telContr}</p>}
+                                {contr.genderContr && <p><strong>Пол:</strong> {contr.genderContr}</p>}
                             </div>
                         </div>
                     ))}
@@ -169,12 +192,12 @@ const AddContragent = () => {
                     <div className={classes.modal_content}>
                         <h3>Добавить нового контрагента</h3>
                         <div className={classes.listItems}>
-                            <input
+                            {/* <input
                                 type="text"
                                 placeholder="Название контрагента"
                                 value={nazvanieContr}
                                 onChange={(e) => setNazvanieContr(e.target.value)}
-                            />
+                            /> */}
                             <input
                                 type="text"
                                 placeholder="Полное наименование компании"
@@ -187,18 +210,45 @@ const AddContragent = () => {
                                 value={socrNazvanieContr}
                                 onChange={(e) => setSocrNazvanieContr(e.target.value)}
                             />
-                            <input
-                                type="text"
-                                placeholder="Действует на основании"
-                                value={osnovanieContr}
-                                onChange={(e) => setOsnovanieContr(e.target.value)}
-                            />
+
+                            <label>
+                                Основание
+                                <select
+                                    value={osnovanieContr}
+                                    onChange={(e) => setOsnovanieContr(e.target.value)}
+                                >
+                                    <option value="Устав">Устав</option>
+                                    <option value="ИП">ИП</option>
+                                    <option value="Самозанятый">Самозанятый</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Печать
+                                <select
+                                    value={pechatContr}
+                                    onChange={(e) => setPechatContr(e.target.value === "true")}
+                                >
+                                    <option value="false">Нет</option>
+                                    <option value="true">Да</option>
+                                </select>
+                            </label>
                             <input
                                 type="text"
                                 placeholder="Должность"
                                 value={dolzhnostContr}
                                 onChange={(e) => setDolzhnostContr(e.target.value)}
                             />
+                            <label>
+                                Пол
+                                <select
+                                    value={genderContr}
+                                    onChange={(e) => setGenderContr(e.target.value)}
+                                >
+                                    <option value="Мужской">Мужской</option>
+                                    <option value="Женский">Женский</option>
+                                </select>
+                            </label>
                             <input
                                 type="text"
                                 placeholder="ФИО"
@@ -249,25 +299,25 @@ const AddContragent = () => {
                             />
                             <input
                                 type="text"
-                                placeholder="ОКТМО"
+                                placeholder="ОКТМО (для гос.)"
                                 value={oktmoContr}
                                 onChange={(e) => setOktmoContr(e.target.value)}
                             />
                             <input
                                 type="text"
-                                placeholder="ОКАТО"
+                                placeholder="ОКАТО (для гос.)"
                                 value={okatoContr}
                                 onChange={(e) => setOkatoContr(e.target.value)}
                             />
                             <input
                                 type="text"
-                                placeholder="ОКПО"
+                                placeholder="ОКПО (для гос.)"
                                 value={okpoContr}
                                 onChange={(e) => setOkpoContr(e.target.value)}
                             />
                             <input
                                 type="text"
-                                placeholder="ОКОПФ"
+                                placeholder="ОКОПФ (для гос.)"
                                 value={okopfContr}
                                 onChange={(e) => setOkopfContr(e.target.value)}
                             />
@@ -279,13 +329,13 @@ const AddContragent = () => {
                             />
                             <input
                                 type="text"
-                                placeholder="ОГРНИП"
+                                placeholder="ОГРНИП (для ИП)"
                                 value={ogrnipContr}
                                 onChange={(e) => setOgrnipContr(e.target.value)}
                             />
                             <input
                                 type="text"
-                                placeholder="Л/СЧ"
+                                placeholder="Л/СЧ (для гос.)"
                                 value={lschContr}
                                 onChange={(e) => setLschContr(e.target.value)}
                             />
@@ -331,16 +381,6 @@ const AddContragent = () => {
                                 value={telContr}
                                 onChange={(e) => setTelContr(e.target.value)}
                             />
-                            <label>
-                                Печать
-                                <select
-                                    value={pechatContr}
-                                    onChange={(e) => setPechatContr(e.target.value === "true")}
-                                >
-                                    <option value="false">Нет</option>
-                                    <option value="true">Да</option>
-                                </select>
-                            </label>
                         </div>
                         <div className={classes.main_name}>
                             <button onClick={handleAddContr}>Добавить</button>
