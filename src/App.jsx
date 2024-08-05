@@ -6,6 +6,7 @@ import Non_Found_Page from "./Components/Pages/Non_Found_Page";
 import Layout from "./Components/Standart/Layout/Layout";
 import Ip_Page from "./Components/Pages/Ip_Page";
 import Contagent_Page from "./Components/Pages/Contagent_Page";
+import Documents_Page from "./Components/Pages/Documents_Page";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <Route index element={<Main_Page />} />
           <Route path="/ip" element={<Ip_Page />} />
           <Route path="/contractors" element={<Contagent_Page />} />
-          <Route path="/documents" element={<Main_Page />} />
+          <Route path="/documents" element={<Documents_Page />} />
           <Route path="*" element={<Non_Found_Page />} />
         </Route>
       </Routes>

@@ -5,35 +5,34 @@ const AddContragent = () => {
     const [selectedContr, setSelectedContr] = useState(null);
     const [contrData, setContrData] = useState([]);
 
-    const [nazvanieContr, setNazvanieContr] = useState('');
-    const [polnoeNazvanieContr, setPolnoeNazvanieContr] = useState('');
-    const [socrNazvanieContr, setSocrNazvanieContr] = useState('');
-    const [osnovanieContr, setOsnovanieContr] = useState('Устава');
-    const [pechatContr, setPechatContr] = useState(false);
-    const [dolzhnostContr, setDolzhnostContr] = useState('');
-    const [fioContr, setFioContr] = useState('');
-    const [dolzhnostFioContr, setDolzhnostFioContr] = useState('');
-    const [ioFContr, setIOFContr] = useState('');
-    const [passportSeriaContr, setPassportSeriaContr] = useState('');
-    const [passportNomerContr, setPassportNomerContr] = useState('');
-    const [adressContr, setAdressContr] = useState('');
-    const [innContr, setInnContr] = useState('');
-    const [kppContr, setKppContr] = useState('');
-    const [oktmoContr, setOktmoContr] = useState('');
-    const [okatoContr, setOkatoContr] = useState('');
-    const [okpoContr, setOkpoContr] = useState('');
-    const [okopfContr, setOkopfContr] = useState('');
-    const [ogrnContr, setOgrnContr] = useState('');
-    const [ogrnipContr, setOgrnipContr] = useState('');
-    const [lschContr, setLschContr] = useState('');
-    const [rschContr, setRschContr] = useState('');
-    const [kschContr, setKschContr] = useState('');
-    const [bankContr, setBankContr] = useState('');
-    const [bikBankaContr, setBikBankaContr] = useState('');
-    const [okoguContr, setOkoguContr] = useState('');
-    const [emailContr, setEmailContr] = useState('');
-    const [telContr, setTelContr] = useState('');
+    const [PolnoeNazvanie_contr_1, setPolnoeNazvanie_contr_1] = useState('');
+    const [Dolzhnost_FIO_contr_1, setDolzhnost_FIO_contr_1] = useState('');
+    const [Osnovanie_contr_1, setOsnovanie_contr_1] = useState('Устава');
+    const [SocrNazvanie_contr_1, setSocrNazvanie_contr_1] = useState('');
+    const [OGRNIP_contr_1, setOGRNIP_contr_1] = useState('');
+    const [Adress_contr_1, setAdress_contr_1] = useState('');
+    const [INN_contr_1, setINN_contr_1] = useState('');
+    const [KPP_contr_1, setKPP_contr_1] = useState('');
+    const [OKTMO_contr_1, setOKTMO_contr_1] = useState('');
+    const [OKATO_contr_1, setOKATO_contr_1] = useState('');
+    const [Pechat_contr_1, setPechat_contr_1] = useState(false);
+    const [Dolzhnost_contr_1, setDolzhnost_contr_1] = useState('');
+    const [IO_F_contr_1, setIO_F_contr_1] = useState('');
+    const [OKPO_contr_1, setOKPO_contr_1] = useState('');
+    const [OKOPF_contr_1, setOKOPF_contr_1] = useState('');
+    const [OGRN_contr_1, setOGRN_contr_1] = useState('');
+    const [L_SCH_contr_1, setL_SCH_contr_1] = useState('');
+    const [R_SCH_contr_1, setR_SCH_contr_1] = useState('');
+    const [K_SCH_contr_1, setK_SCH_contr_1] = useState('');
+    const [Bank_contr_1, setBank_contr_1] = useState('');
+    const [BIK_banka_contr_1, setBIK_banka_contr_1] = useState('');
+    const [OKOGU_contr_1, setOKOGU_contr_1] = useState('');
+    const [email_contr_1, setEmail_contr_1] = useState('');
+    const [tel_contr_1, setTel_contr_1] = useState('');
     const [genderContr, setGenderContr] = useState('Мужской');
+    const [passportNomerContr, setPassportNomerContr] = useState('');
+    const [passportSeriaContr, setPassportSeriaContr] = useState('');
+    const [fioContr, setFioContr] = useState('');
 
     const [isAddContrModalOpen, setIsAddContrModalOpen] = useState(false);
 
@@ -42,78 +41,77 @@ const AddContragent = () => {
     };
 
     const handleAddContr = () => {
-        if (polnoeNazvanieContr) {
-            let osnovanieText = osnovanieContr;
-            if (osnovanieContr === 'ИП') {
-                osnovanieText = 'ОГРНИП';
-            } else if (osnovanieContr === 'Самозанятый') {
+        if (PolnoeNazvanie_contr_1) {
+            let osnovanieText = Osnovanie_contr_1;
+            if (Osnovanie_contr_1 === 'ИП') {
+                osnovanieText = 'ОГРИНИП';
+            } else if (Osnovanie_contr_1 === 'Самозанятый') {
                 osnovanieText = genderContr === 'Мужской'
                     ? 'зарегистрирован в ФНС в качестве налогоплательщика налога на профессиональный доход в соответствии с ФЗ от 27.11.2018 №422-ФЗ'
                     : 'зарегистрирована в ФНС в качестве налогоплательщика налога на профессиональный доход в соответствии с ФЗ от 27.11.2018 №422-ФЗ';
-            } else if (osnovanieContr === 'Устав') {
+            } else if (Osnovanie_contr_1 === 'Устав') {
                 osnovanieText = 'Устава';
             }
 
             const newContr = {
-                // nazvanieContr,
-                polnoeNazvanieContr,
-                ...(socrNazvanieContr && { socrNazvanieContr }),
-                ...(osnovanieText && { osnovanieContr: osnovanieText }),
-                ...(pechatContr && { pechatContr: "М.П." }),
-                ...(dolzhnostContr && { dolzhnostContr }),
+                PolnoeNazvanie_contr_1,
+                ...(SocrNazvanie_contr_1 && { SocrNazvanie_contr_1 }),
+                ...(osnovanieText && { Osnovanie_contr_1: osnovanieText }),
+                ...(Pechat_contr_1 && { Pechat_contr_1: "М.П." }),
+                ...(Dolzhnost_contr_1 && { Dolzhnost_contr_1 }),
                 ...(fioContr && { fioContr }),
-                ...(dolzhnostFioContr && { dolzhnostFioContr }),
-                ...(ioFContr && { ioFContr }),
+                ...(Dolzhnost_FIO_contr_1 && { Dolzhnost_FIO_contr_1 }),
+                ...(IO_F_contr_1 && { IO_F_contr_1 }),
                 ...(passportSeriaContr && { passportSeriaContr }),
                 ...(passportNomerContr && { passportNomerContr }),
-                ...(adressContr && { adressContr }),
-                ...(innContr && { innContr }),
-                ...(kppContr && { kppContr }),
-                ...(oktmoContr && { oktmoContr }),
-                ...(okatoContr && { okatoContr }),
-                ...(okpoContr && { okpoContr }),
-                ...(okopfContr && { okopfContr }),
-                ...(ogrnContr && { ogrnContr }),
-                ...(ogrnipContr && { ogrnipContr }),
-                ...(lschContr && { lschContr }),
-                ...(rschContr && { rschContr }),
-                ...(kschContr && { kschContr }),
-                ...(bankContr && { bankContr }),
-                ...(bikBankaContr && { bikBankaContr }),
-                ...(okoguContr && { okoguContr }),
-                ...(emailContr && { emailContr }),
-                ...(telContr && { telContr }),
+                ...(Adress_contr_1 && { Adress_contr_1 }),
+                ...(INN_contr_1 && { INN_contr_1 }),
+                ...(KPP_contr_1 && { KPP_contr_1 }),
+                ...(OKTMO_contr_1 && { OKTMO_contr_1 }),
+                ...(OKATO_contr_1 && { OKATO_contr_1 }),
+                ...(OKPO_contr_1 && { OKPO_contr_1 }),
+                ...(OKOPF_contr_1 && { OKOPF_contr_1 }),
+                ...(OGRN_contr_1 && { OGRN_contr_1 }),
+                ...(OGRNIP_contr_1 && { OGRNIP_contr_1 }),
+                ...(L_SCH_contr_1 && { L_SCH_contr_1 }),
+                ...(R_SCH_contr_1 && { R_SCH_contr_1 }),
+                ...(K_SCH_contr_1 && { K_SCH_contr_1 }),
+                ...(Bank_contr_1 && { Bank_contr_1 }),
+                ...(BIK_banka_contr_1 && { BIK_banka_contr_1 }),
+                ...(OKOGU_contr_1 && { OKOGU_contr_1 }),
+                ...(email_contr_1 && { email_contr_1 }),
+                ...(tel_contr_1 && { tel_contr_1 }),
                 ...(genderContr && { genderContr }),
             };
             setContrData([...contrData, newContr]);
-            setNazvanieContr('');
-            setPolnoeNazvanieContr('');
-            setSocrNazvanieContr('');
-            setOsnovanieContr('');
-            setPechatContr(false);
-            setDolzhnostContr('');
+            setPolnoeNazvanie_contr_1('');
+            setDolzhnost_FIO_contr_1('');
+            setSocrNazvanie_contr_1('');
+            setOsnovanie_contr_1('');
+            setPechat_contr_1(false);
+            setDolzhnost_contr_1('');
             setFioContr('');
-            setDolzhnostFioContr('');
-            setIOFContr('');
+            setDolzhnost_FIO_contr_1('');
+            setIO_F_contr_1('');
             setPassportSeriaContr('');
             setPassportNomerContr('');
-            setAdressContr('');
-            setInnContr('');
-            setKppContr('');
-            setOktmoContr('');
-            setOkatoContr('');
-            setOkpoContr('');
-            setOkopfContr('');
-            setOgrnContr('');
-            setOgrnipContr('');
-            setLschContr('');
-            setRschContr('');
-            setKschContr('');
-            setBankContr('');
-            setBikBankaContr('');
-            setOkoguContr('');
-            setEmailContr('');
-            setTelContr('');
+            setAdress_contr_1('');
+            setINN_contr_1('');
+            setKPP_contr_1('');
+            setOKTMO_contr_1('');
+            setOKATO_contr_1('');
+            setOKPO_contr_1('');
+            setOKOPF_contr_1('');
+            setOGRN_contr_1('');
+            setOGRNIP_contr_1('');
+            setL_SCH_contr_1('');
+            setR_SCH_contr_1('');
+            setK_SCH_contr_1('');
+            setBank_contr_1('');
+            setBIK_banka_contr_1('');
+            setOKOGU_contr_1('');
+            setEmail_contr_1('');
+            setTel_contr_1('');
             setGenderContr('');
             setIsAddContrModalOpen(false);
         }
@@ -127,6 +125,8 @@ const AddContragent = () => {
             .catch(error => console.error('Error fetching IP data:', error));
     }, []);
 
+    console.log(contrData)
+
     return (
         <div className={classes.main}>
             <div className={classes.main_name}>
@@ -137,49 +137,48 @@ const AddContragent = () => {
             <div className={classes.list}>
                 <div className={classes.list_left}>
                     {contrData.map(contr => (
-                        <div key={contr.polnoeNazvanieContr} className={classes.contr_container}>
+                        <div key={contr.PolnoeNazvanie_contr_1} className={classes.contr_container}>
                             <div
-                                className={`${classes.list_left_contr} ${selectedContr === contr.polnoeNazvanieContr ? classes.selected : ''}`}
-                                onClick={() => handleContrClick(contr.polnoeNazvanieContr)}
+                                className={`${classes.list_left_contr} ${selectedContr === contr.PolnoeNazvanie_contr_1 ? classes.selected : ''}`}
+                                onClick={() => handleContrClick(contr.PolnoeNazvanie_contr_1)}
                             >
-                                {contr.polnoeNazvanieContr} ({contr.bankContr})
+                                {contr.PolnoeNazvanie_contr_1} ({contr.Bank_contr_1})
                             </div>
                         </div>
                     ))}
                 </div>
                 <div className={`${classes.list_right} ${selectedContr ? classes.visible : ''}`}>
-                    {selectedContr && contrData.filter(contr => contr.polnoeNazvanieContr === selectedContr).map(contr => (
-                        <div key={contr.polnoeNazvanieContr}>
-                            <h3>{contr.polnoeNazvanieContr}</h3>
+                    {selectedContr && contrData.filter(contr => contr.PolnoeNazvanie_contr_1 === selectedContr).map(contr => (
+                        <div key={contr.PolnoeNazvanie_contr_1}>
+                            <h3>{contr.PolnoeNazvanie_contr_1}</h3>
                             <div className={classes.bank_details}>
-                                {/* {contr.nazvanieContr && <p><strong>Название контрагента:</strong> {contr.nazvanieContr}</p>} */}
-                                {contr.polnoeNazvanieContr && <p><strong>Полное наименование:</strong> {contr.polnoeNazvanieContr}</p>}
-                                {contr.socrNazvanieContr && <p><strong>Сокращенное наименование:</strong> {contr.socrNazvanieContr}</p>}
-                                {contr.osnovanieContr && <p><strong>Действует на основании:</strong> {contr.osnovanieContr}</p>}
-                                {contr.pechatContr && <p><strong>Печать:</strong> {contr.pechatContr}</p>}
-                                {contr.dolzhnostContr && <p><strong>Должность:</strong> {contr.dolzhnostContr}</p>}
+                                {contr.PolnoeNazvanie_contr_1 && <p><strong>Полное наименование:</strong> {contr.PolnoeNazvanie_contr_1}</p>}
+                                {contr.SocrNazvanie_contr_1 && <p><strong>Сокращенное наименование:</strong> {contr.SocrNazvanie_contr_1}</p>}
+                                {contr.Osnovanie_contr_1 && <p><strong>Действует на основании:</strong> {contr.Osnovanie_contr_1}</p>}
+                                {contr.Pechat_contr_1 && <p><strong>Печать:</strong> {contr.Pechat_contr_1}</p>}
+                                {contr.Dolzhnost_contr_1 && <p><strong>Должность:</strong> {contr.Dolzhnost_contr_1}</p>}
                                 {contr.fioContr && <p><strong>ФИО:</strong> {contr.fioContr}</p>}
-                                {contr.dolzhnostFioContr && <p><strong>Должность и ФИО (в род. падеже):</strong> {contr.dolzhnostFioContr}</p>}
-                                {contr.ioFContr && <p><strong>И.О. Фамилия:</strong> {contr.ioFContr}</p>}
+                                {contr.Dolzhnost_FIO_contr_1 && <p><strong>Должность и ФИО (в род. падеже):</strong> {contr.Dolzhnost_FIO_contr_1}</p>}
+                                {contr.IO_F_contr_1 && <p><strong>И.О. Фамилия:</strong> {contr.IO_F_contr_1}</p>}
                                 {contr.passportSeriaContr && <p><strong>Паспорт Серия:</strong> {contr.passportSeriaContr}</p>}
                                 {contr.passportNomerContr && <p><strong>Паспорт Номер:</strong> {contr.passportNomerContr}</p>}
-                                {contr.adressContr && <p><strong>Адрес:</strong> {contr.adressContr}</p>}
-                                {contr.innContr && <p><strong>ИНН:</strong> {contr.innContr}</p>}
-                                {contr.kppContr && <p><strong>КПП:</strong> {contr.kppContr}</p>}
-                                {contr.oktmoContr && <p><strong>ОКТМО:</strong> {contr.oktmoContr}</p>}
-                                {contr.okatoContr && <p><strong>ОКАТО:</strong> {contr.okatoContr}</p>}
-                                {contr.okpoContr && <p><strong>ОКПО:</strong> {contr.okpoContr}</p>}
-                                {contr.okopfContr && <p><strong>ОКОПФ:</strong> {contr.okopfContr}</p>}
-                                {contr.ogrnContr && <p><strong>ОГРН:</strong> {contr.ogrnContr}</p>}
-                                {contr.ogrnipContr && <p><strong>ОГРНИП:</strong> {contr.ogrnipContr}</p>}
-                                {contr.lschContr && <p><strong>Л/СЧ:</strong> {contr.lschContr}</p>}
-                                {contr.rschContr && <p><strong>Р/СЧ:</strong> {contr.rschContr}</p>}
-                                {contr.kschContr && <p><strong>К/СЧ:</strong> {contr.kschContr}</p>}
-                                {contr.bankContr && <p><strong>Банк:</strong> {contr.bankContr}</p>}
-                                {contr.bikBankaContr && <p><strong>БИК банка:</strong> {contr.bikBankaContr}</p>}
-                                {contr.okoguContr && <p><strong>ОКОГУ:</strong> {contr.okoguContr}</p>}
-                                {contr.emailContr && <p><strong>E-mail:</strong> {contr.emailContr}</p>}
-                                {contr.telContr && <p><strong>Телефон:</strong> {contr.telContr}</p>}
+                                {contr.Adress_contr_1 && <p><strong>Адрес:</strong> {contr.Adress_contr_1}</p>}
+                                {contr.INN_contr_1 && <p><strong>ИНН:</strong> {contr.INN_contr_1}</p>}
+                                {contr.KPP_contr_1 && <p><strong>КПП:</strong> {contr.KPP_contr_1}</p>}
+                                {contr.OKTMO_contr_1 && <p><strong>ОКТМО:</strong> {contr.OKTMO_contr_1}</p>}
+                                {contr.OKATO_contr_1 && <p><strong>ОКАТО:</strong> {contr.OKATO_contr_1}</p>}
+                                {contr.OKPO_contr_1 && <p><strong>ОКПО:</strong> {contr.OKPO_contr_1}</p>}
+                                {contr.OKOPF_contr_1 && <p><strong>ОКОПФ:</strong> {contr.OKOPF_contr_1}</p>}
+                                {contr.OGRN_contr_1 && <p><strong>ОГРН:</strong> {contr.OGRN_contr_1}</p>}
+                                {contr.OGRNIP_contr_1 && <p><strong>ОГРНИП:</strong> {contr.OGRNIP_contr_1}</p>}
+                                {contr.L_SCH_contr_1 && <p><strong>Л/СЧ:</strong> {contr.L_SCH_contr_1}</p>}
+                                {contr.R_SCH_contr_1 && <p><strong>Р/СЧ:</strong> {contr.R_SCH_contr_1}</p>}
+                                {contr.K_SCH_contr_1 && <p><strong>К/СЧ:</strong> {contr.K_SCH_contr_1}</p>}
+                                {contr.Bank_contr_1 && <p><strong>Банк:</strong> {contr.Bank_contr_1}</p>}
+                                {contr.BIK_banka_contr_1 && <p><strong>БИК банка:</strong> {contr.BIK_banka_contr_1}</p>}
+                                {contr.OKOGU_contr_1 && <p><strong>ОКОГУ:</strong> {contr.OKOGU_contr_1}</p>}
+                                {contr.email_contr_1 && <p><strong>E-mail:</strong> {contr.email_contr_1}</p>}
+                                {contr.tel_contr_1 && <p><strong>Телефон:</strong> {contr.tel_contr_1}</p>}
                                 {contr.genderContr && <p><strong>Пол:</strong> {contr.genderContr}</p>}
                             </div>
                         </div>
@@ -192,30 +191,24 @@ const AddContragent = () => {
                     <div className={classes.modal_content}>
                         <h3>Добавить нового контрагента</h3>
                         <div className={classes.listItems}>
-                            {/* <input
-                                type="text"
-                                placeholder="Название контрагента"
-                                value={nazvanieContr}
-                                onChange={(e) => setNazvanieContr(e.target.value)}
-                            /> */}
                             <input
                                 type="text"
                                 placeholder="Полное наименование компании"
-                                value={polnoeNazvanieContr}
-                                onChange={(e) => setPolnoeNazvanieContr(e.target.value)}
+                                value={PolnoeNazvanie_contr_1}
+                                onChange={(e) => setPolnoeNazvanie_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Сокращенное наименование"
-                                value={socrNazvanieContr}
-                                onChange={(e) => setSocrNazvanieContr(e.target.value)}
+                                value={SocrNazvanie_contr_1}
+                                onChange={(e) => setSocrNazvanie_contr_1(e.target.value)}
                             />
 
                             <label>
                                 Основание
                                 <select
-                                    value={osnovanieContr}
-                                    onChange={(e) => setOsnovanieContr(e.target.value)}
+                                    value={Osnovanie_contr_1}
+                                    onChange={(e) => setOsnovanie_contr_1(e.target.value)}
                                 >
                                     <option value="Устав">Устав</option>
                                     <option value="ИП">ИП</option>
@@ -226,8 +219,8 @@ const AddContragent = () => {
                             <label>
                                 Печать
                                 <select
-                                    value={pechatContr}
-                                    onChange={(e) => setPechatContr(e.target.value === "true")}
+                                    value={Pechat_contr_1}
+                                    onChange={(e) => setPechat_contr_1(e.target.value === "true")}
                                 >
                                     <option value="false">Нет</option>
                                     <option value="true">Да</option>
@@ -236,8 +229,8 @@ const AddContragent = () => {
                             <input
                                 type="text"
                                 placeholder="Должность"
-                                value={dolzhnostContr}
-                                onChange={(e) => setDolzhnostContr(e.target.value)}
+                                value={Dolzhnost_contr_1}
+                                onChange={(e) => setDolzhnost_contr_1(e.target.value)}
                             />
                             <label>
                                 Пол
@@ -258,14 +251,14 @@ const AddContragent = () => {
                             <input
                                 type="text"
                                 placeholder="Должность и ФИО (в род. падеже)"
-                                value={dolzhnostFioContr}
-                                onChange={(e) => setDolzhnostFioContr(e.target.value)}
+                                value={Dolzhnost_FIO_contr_1}
+                                onChange={(e) => setDolzhnost_FIO_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="И.О. Фамилия"
-                                value={ioFContr}
-                                onChange={(e) => setIOFContr(e.target.value)}
+                                value={IO_F_contr_1}
+                                onChange={(e) => setIO_F_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
@@ -282,104 +275,104 @@ const AddContragent = () => {
                             <input
                                 type="text"
                                 placeholder="Адрес"
-                                value={adressContr}
-                                onChange={(e) => setAdressContr(e.target.value)}
+                                value={Adress_contr_1}
+                                onChange={(e) => setAdress_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ИНН"
-                                value={innContr}
-                                onChange={(e) => setInnContr(e.target.value)}
+                                value={INN_contr_1}
+                                onChange={(e) => setINN_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="КПП"
-                                value={kppContr}
-                                onChange={(e) => setKppContr(e.target.value)}
+                                value={KPP_contr_1}
+                                onChange={(e) => setKPP_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОКТМО (для гос.)"
-                                value={oktmoContr}
-                                onChange={(e) => setOktmoContr(e.target.value)}
+                                value={OKTMO_contr_1}
+                                onChange={(e) => setOKTMO_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОКАТО (для гос.)"
-                                value={okatoContr}
-                                onChange={(e) => setOkatoContr(e.target.value)}
+                                value={OKATO_contr_1}
+                                onChange={(e) => setOKATO_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОКПО (для гос.)"
-                                value={okpoContr}
-                                onChange={(e) => setOkpoContr(e.target.value)}
+                                value={OKPO_contr_1}
+                                onChange={(e) => setOKPO_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОКОПФ (для гос.)"
-                                value={okopfContr}
-                                onChange={(e) => setOkopfContr(e.target.value)}
+                                value={OKOPF_contr_1}
+                                onChange={(e) => setOKOPF_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОГРН"
-                                value={ogrnContr}
-                                onChange={(e) => setOgrnContr(e.target.value)}
+                                value={OGRN_contr_1}
+                                onChange={(e) => setOGRN_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОГРНИП (для ИП)"
-                                value={ogrnipContr}
-                                onChange={(e) => setOgrnipContr(e.target.value)}
+                                value={OGRNIP_contr_1}
+                                onChange={(e) => setOGRNIP_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Л/СЧ (для гос.)"
-                                value={lschContr}
-                                onChange={(e) => setLschContr(e.target.value)}
+                                value={L_SCH_contr_1}
+                                onChange={(e) => setL_SCH_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Р/СЧ"
-                                value={rschContr}
-                                onChange={(e) => setRschContr(e.target.value)}
+                                value={R_SCH_contr_1}
+                                onChange={(e) => setR_SCH_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="К/СЧ"
-                                value={kschContr}
-                                onChange={(e) => setKschContr(e.target.value)}
+                                value={K_SCH_contr_1}
+                                onChange={(e) => setK_SCH_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Наименование банка"
-                                value={bankContr}
-                                onChange={(e) => setBankContr(e.target.value)}
+                                value={Bank_contr_1}
+                                onChange={(e) => setBank_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="БИК банка"
-                                value={bikBankaContr}
-                                onChange={(e) => setBikBankaContr(e.target.value)}
+                                value={BIK_banka_contr_1}
+                                onChange={(e) => setBIK_banka_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="ОКОГУ"
-                                value={okoguContr}
-                                onChange={(e) => setOkoguContr(e.target.value)}
+                                value={OKOGU_contr_1}
+                                onChange={(e) => setOKOGU_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="E-mail"
-                                value={emailContr}
-                                onChange={(e) => setEmailContr(e.target.value)}
+                                value={email_contr_1}
+                                onChange={(e) => setEmail_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Телефон"
-                                value={telContr}
-                                onChange={(e) => setTelContr(e.target.value)}
+                                value={tel_contr_1}
+                                onChange={(e) => setTel_contr_1(e.target.value)}
                             />
                         </div>
                         <div className={classes.main_name}>
