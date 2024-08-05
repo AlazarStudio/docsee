@@ -8,15 +8,16 @@
     overflow-x: hidden;
 }
 
-.main_name{
+.main_name {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
 }
 
-.main_name button{
+.main_name button {
     width: 50%;
+    margin-top: 20px;
 }
 
 .list {
@@ -29,11 +30,13 @@
     flex-direction: column;
 }
 
-.ip_container {
+.ip_container,
+.contr_container {
     margin-bottom: 10px;
 }
 
-.list_left_ip {
+.list_left_ip,
+.list_left_contr {
     cursor: pointer;
     padding: 10px;
     border: 1px solid #ccc;
@@ -47,7 +50,8 @@
     border-radius: 10px;
 }
 
-.list_left_ip.selected {
+.list_left_ip.selected,
+.list_left_contr.selected {
     background-color: #A53F80;
     color: #fff;
 }
@@ -77,11 +81,14 @@
 
 .list_right {
     width: 500px;
+    height: calc(100vh - 230px);
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
     transform: translateX(120%);
     transition: transform 0.5s ease-in-out;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .list_right.visible {
@@ -99,6 +106,20 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
+}
+
+.listItems label {
+    width: 49%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listItems select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 100%;
 }
 
 .add_ip_form button {
@@ -134,13 +155,14 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 400px;
+    max-width: 800px;
 }
 
 .modal_content input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
+    width: 49%;
 }
 
 .modal_content button {
@@ -157,7 +179,7 @@
     background-color: #8e3469;
 }
 
-.buttonAdd{
+.buttonAdd {
     width: 100%;
     height: 40px;
     background-color: #A53F80;
@@ -169,7 +191,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.main_name .buttonAddIP{
+
+.main_name .buttonAddIP,
+.main_name .buttonAddContr {
     width: 300px;
     height: 40px;
     background-color: #A53F80;
@@ -182,13 +206,20 @@
 }
 
 .buttonAdd:hover,
-.buttonAddIP:hover{
+.buttonAddIP:hover {
     opacity: 1;
 }
 
-.bank_details{
+.bank_details {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-top: 20px;
+}
+
+.listItems {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
 }

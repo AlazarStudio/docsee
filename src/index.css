@@ -24,3 +24,17 @@ main {
     gap: 80px;
     padding-bottom: 80px;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #A53F80;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #A53F80;
+}
