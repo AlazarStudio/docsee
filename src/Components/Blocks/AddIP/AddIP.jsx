@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import classes from './AddIP.module.css';
 
 const AddIP = () => {
@@ -29,9 +30,8 @@ const AddIP = () => {
     const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch('../../../../ipName.json')
-            .then(response => response.json())
-            .then(data => setIpData(data))
+        axios.get('http://localhost:3000/db/ipName.json')
+            .then(response => setIpData(response.data))
             .catch(error => console.error('Error fetching IP data:', error));
     }, []);
 
@@ -67,54 +67,67 @@ const AddIP = () => {
                 tel_akk: tel_akk,
                 banks: {}
             };
-            setIpData([...ipData, newIp]);
-            setPolnoe_nazvanie_akk('');
-            setSocr_name_akk('');
-            setSocr_name_fio_akk('');
-            setFIO_akk('');
-            setDolzhnost_akk('');
-            setIO_F_akk('');
-            setEmail_akk('');
-            setTel_akk('');
-            setIsAddIpModalOpen(false);
+
+            axios.post('http://localhost:3000/add-ip', { data: newIp })
+                .then(() => {
+                    setIpData([...ipData, newIp]);
+                    setPolnoe_nazvanie_akk('');
+                    setSocr_name_akk('');
+                    setSocr_name_fio_akk('');
+                    setFIO_akk('');
+                    setDolzhnost_akk('');
+                    setIO_F_akk('');
+                    setEmail_akk('');
+                    setTel_akk('');
+                    setIsAddIpModalOpen(false);
+                })
+                .catch(error => console.error('Error adding IP:', error));
         }
     };
 
     const handleAddBank = () => {
         if (selectedIP && BANK_akk && INN_akk) {
             const bankNameWithPrefix = `Реквизиты ${BANK_akk}`;
-            const updatedIpData = ipData.map(ip => {
-                if (ip.Polnoe_nazvanie_akk === selectedIP) {
-                    return {
-                        ...ip,
-                        banks: {
-                            ...ip.banks,
-                            [bankNameWithPrefix]: {
-                                Adress_akk: Adress_akk,
-                                INN_akk: INN_akk,
-                                OGRNIP_akk: OGRNIP_akk,
-                                R_SCH_akk: R_SCH_akk,
-                                BANK_akk: BANK_akk,
-                                BIK_akk: BIK_akk,
-                                BANK_inn: BANK_inn,
-                                K_SCH_akk: K_SCH_akk,
-                            }
-                        }
-                    };
+            const bankDetails = {
+                [bankNameWithPrefix]: {
+                    Adress_akk: Adress_akk,
+                    INN_akk: INN_akk,
+                    OGRNIP_akk: OGRNIP_akk,
+                    R_SCH_akk: R_SCH_akk,
+                    BANK_akk: BANK_akk,
+                    BIK_akk: BIK_akk,
+                    BANK_inn: BANK_inn,
+                    K_SCH_akk: K_SCH_akk,
                 }
-                return ip;
-            });
-            setIpData(updatedIpData);
-            setNewBankName('');
-            setINN_akk('');
-            setAdress_akk('');
-            setOGRNIP_akk('');
-            setR_SCH_akk('');
-            setBANK_akk('');
-            setBIK_akk('');
-            setBANK_inn('');
-            setK_SCH_akk('');
-            setIsAddBankModalOpen(false);
+            };
+
+            axios.post('http://localhost:3000/add-bank-details', { ipName: selectedIP, bankDetails })
+                .then(() => {
+                    const updatedIpData = ipData.map(ip => {
+                        if (ip.Polnoe_nazvanie_akk === selectedIP) {
+                            return {
+                                ...ip,
+                                banks: {
+                                    ...ip.banks,
+                                    ...bankDetails
+                                }
+                            };
+                        }
+                        return ip;
+                    });
+                    setIpData(updatedIpData);
+                    setNewBankName('');
+                    setINN_akk('');
+                    setAdress_akk('');
+                    setOGRNIP_akk('');
+                    setR_SCH_akk('');
+                    setBANK_akk('');
+                    setBIK_akk('');
+                    setBANK_inn('');
+                    setK_SCH_akk('');
+                    setIsAddBankModalOpen(false);
+                })
+                .catch(error => console.error('Error adding bank:', error));
         }
     };
 
@@ -127,7 +140,7 @@ const AddIP = () => {
 
             <div className={classes.list}>
                 <div className={classes.list_left}>
-                    {ipData.map(ip => (
+                    {Array.isArray(ipData) && ipData.map(ip => (
                         <div key={ip.Polnoe_nazvanie_akk} className={classes.ip_container}>
                             <div
                                 className={`${classes.list_left_ip} ${selectedIP === ip.Polnoe_nazvanie_akk ? classes.selected : ''}`}

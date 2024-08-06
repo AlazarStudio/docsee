@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import classes from './AddContragent.module.css';
+import classes from './AddReceivedServices.module.css';
 import axios from 'axios';
 
-const AddContragent = () => {
+const AddReceivedServices = () => {
     const [selectedContr, setSelectedContr] = useState(null);
     const [contrData, setContrData] = useState([]);
 
@@ -84,7 +84,7 @@ const AddContragent = () => {
                 ...(tel_contr_1 && { tel_contr_1 }),
                 ...(genderContr && { genderContr }),
             };
-            axios.post('http://localhost:3000/add-contragent', { data: newContr })
+            axios.post('http://localhost:3000/add-receivedServices', { data: newContr })
                 .then(() => {
                     setContrData([...contrData, newContr]);
                     setPolnoeNazvanie_contr_1('');
@@ -123,7 +123,7 @@ const AddContragent = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:3000/db/contragents.json')
+        axios.get('http://localhost:3000/db/receivedServices.json')
             .then(response => setContrData(response.data))
             .catch(error => console.error('Error fetching IP data:', error));
     }, []);
@@ -131,8 +131,8 @@ const AddContragent = () => {
     return (
         <div className={classes.main}>
             <div className={classes.main_name}>
-                <h2>Список Контрагентов</h2>
-                <button className={classes.buttonAddContr} onClick={() => setIsAddContrModalOpen(true)}>Добавить нового контрагента</button>
+                <h2>Список получателей услуг</h2>
+                <button className={classes.buttonAddContr} onClick={() => setIsAddContrModalOpen(true)}>Добавить нового получателя услуг</button>
             </div>
 
             <div className={classes.list}>
@@ -387,4 +387,4 @@ const AddContragent = () => {
     );
 };
 
-export default AddContragent;
+export default AddReceivedServices;

@@ -27,14 +27,17 @@ function Documents_Page({ children, ...props }) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [step, setStep] = useState(1);
 
+    // Новое состояние для хранения данных о созданном документе
+    const [documentData, setDocumentData] = useState(null);
+
     useEffect(() => {
         const loadIpData = async () => {
-            const response = await axios.get('../../../../ipName.json');
+            const response = await axios.get('http://localhost:3000/db/ipName.json');
             setIpList(response.data);
         };
 
         const loadContragentData = async () => {
-            const response = await axios.get('../../../../contragents.json');
+            const response = await axios.get('http://localhost:3000/db/contragents.json');
             setContragentList(response.data);
         };
 
@@ -70,6 +73,9 @@ function Documents_Page({ children, ...props }) {
             const response = await axios.post('http://localhost:3000/generate', { data });
             const filename = response.data;
             alert(`Документ сгенерирован: ${filename}`);
+
+            // Обновление состояния documentData
+            setDocumentData({ filename, ...data });
         } catch (error) {
             console.error("Ошибка при генерации документа", error);
             alert("Ошибка при генерации документа");
@@ -238,6 +244,13 @@ function Documents_Page({ children, ...props }) {
                 {renderStep()}
                 <button className={classes.closeButton} onClick={closeModal}>Закрыть</button>
             </Modal>
+
+            {documentData && (
+                <div className={classes.documentData}>
+                    <h3>Данные о созданном документе</h3>
+                    <pre>{JSON.stringify(documentData, null, 2)}</pre>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,0 +1,227 @@
+/* GenerateDocument.module.css */
+
+.main {
+    padding: 40px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-x: hidden;
+}
+
+.main_name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.main_name button {
+    width: 50%;
+    margin-top: 20px;
+}
+
+.list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.list_left {
+    display: flex;
+    flex-direction: column;
+}
+
+.ip_container,
+.contr_container {
+    margin-bottom: 10px;
+    width: 500px;
+}
+
+.list_left_ip,
+.list_left_contr {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+.list_left_ip.selected,
+.list_left_contr.selected {
+    background-color: #A53F80;
+    color: #fff;
+}
+
+.banks_list {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px 0px 20px;
+    gap: 5px;
+}
+
+.banks_list_item {
+    height: 50px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.banks_list_item.selected {
+    background-color: #A53F80;
+    color: #fff;
+}
+
+.list_right {
+    width: 500px;
+    height: calc(100vh - 230px);
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    transform: translateX(120%);
+    transition: transform 0.5s ease-in-out;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.list_right.visible {
+    transform: translateX(0);
+}
+
+.add_ip_form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add_ip_form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.listItems label {
+    width: 49%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listItems select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.add_ip_form button {
+    padding: 10px;
+    background-color: #A53F80;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.add_ip_form button:hover {
+    background-color: #8e3469;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal_content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 800px;
+}
+
+.modal_content input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 49%;
+}
+
+.modal_content button {
+    padding: 10px;
+    background-color: #A53F80;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.modal_content button:hover {
+    background-color: #8e3469;
+}
+
+.buttonAdd {
+    width: 100%;
+    height: 40px;
+    background-color: #A53F80;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.main_name .buttonAddIP,
+.main_name .buttonAddContr {
+    width: 300px;
+    height: 40px;
+    background-color: #A53F80;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease-in-out;
+    margin: 0;
+}
+
+.buttonAdd:hover,
+.buttonAddIP:hover {
+    opacity: 1;
+}
+
+.bank_details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.listItems {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}

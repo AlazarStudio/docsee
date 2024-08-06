@@ -12,6 +12,7 @@ function Header({ children, active, ...props }) {
                 <div className={classes.header_items}>
                     <Link to={'/ip'} className={`${classes.header_items_link} ${active == 'ИП' && classes.header_items_link_active}`}>ИП</Link>
                     <Link to={'/contractors'} className={`${classes.header_items_link} ${active == 'Контрагенты' && classes.header_items_link_active}`}>Контрагенты</Link>
+                    <Link to={'/receivedServices'} className={`${classes.header_items_link} ${active == 'Получатели услуг' && classes.header_items_link_active}`}>Получатели услуг</Link>
                     <Link to={'/documents'} className={`${classes.header_items_link} ${active == 'Документы' && classes.header_items_link_active}`}>Документы</Link>
                 </div>
             </div>
