@@ -28,6 +28,7 @@ function Documents_Page({ children, ...props }) {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [addReceivedServiceModalIsOpen, setAddReceivedServiceModalIsOpen] = useState(false);
+    const [addContragentModalIsOpen, setAddContragentModalIsOpen] = useState(false); // Новое состояние для модального окна добавления контрагента
     const [step, setStep] = useState(1);
 
     const [documents, setDocuments] = useState([]);
@@ -61,6 +62,37 @@ function Documents_Page({ children, ...props }) {
         email_contr_2: '',
         tel_contr_2: '',
         genderContr: 'Мужской'
+    });
+
+    const [newContragent, setNewContragent] = useState({
+        PolnoeNazvanie_contr_1: '',
+        Dolzhnost_FIO_contr_1: '',
+        Osnovanie_contr_1: 'Устава',
+        SocrNazvanie_contr_1: '',
+        OGRNIP_contr_1: '',
+        Adress_contr_1: '',
+        INN_contr_1: '',
+        KPP_contr_1: '',
+        OKTMO_contr_1: '',
+        OKATO_contr_1: '',
+        Pechat_contr_1: false,
+        Dolzhnost_contr_1: '',
+        IO_F_contr_1: '',
+        OKPO_contr_1: '',
+        OKOPF_contr_1: '',
+        OGRN_contr_1: '',
+        L_SCH_contr_1: '',
+        R_SCH_contr_1: '',
+        K_SCH_contr_1: '',
+        Bank_contr_1: '',
+        BIK_banka_contr_1: '',
+        OKOGU_contr_1: '',
+        email_contr_1: '',
+        tel_contr_1: '',
+        genderContr: 'Мужской',
+        passport_nomer_contr_1: '',
+        passport_seria_contr_1: '',
+        fioContr: ''
     });
 
     useEffect(() => {
@@ -114,8 +146,6 @@ function Documents_Page({ children, ...props }) {
             ...selectedBank,
             ...(dogovorType === '3' && { ...selectedReceivedService })
         };
-
-        console.log(data);
 
         try {
             const response = await axios.post('http://localhost:3000/generate', { data });
@@ -171,21 +201,89 @@ function Documents_Page({ children, ...props }) {
         }
     };
 
+    const handleAddContragent = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/add-contragent', { data: newContragent });
+            setContragentList(prevList => [...prevList, newContragent]);
+            setNewContragent({
+                PolnoeNazvanie_contr_1: '',
+                Dolzhnost_FIO_contr_1: '',
+                Osnovanie_contr_1: 'Устава',
+                SocrNazvanie_contr_1: '',
+                OGRNIP_contr_1: '',
+                Adress_contr_1: '',
+                INN_contr_1: '',
+                KPP_contr_1: '',
+                OKTMO_contr_1: '',
+                OKATO_contr_1: '',
+                Pechat_contr_1: false,
+                Dolzhnost_contr_1: '',
+                IO_F_contr_1: '',
+                OKPO_contr_1: '',
+                OKOPF_contr_1: '',
+                OGRN_contr_1: '',
+                L_SCH_contr_1: '',
+                R_SCH_contr_1: '',
+                K_SCH_contr_1: '',
+                Bank_contr_1: '',
+                BIK_banka_contr_1: '',
+                OKOGU_contr_1: '',
+                email_contr_1: '',
+                tel_contr_1: '',
+                genderContr: 'Мужской',
+                passport_nomer_contr_1: '',
+                passport_seria_contr_1: '',
+                fioContr: ''
+            });
+            setAddContragentModalIsOpen(false);
+        } catch (error) {
+            console.error('Error adding contragent:', error);
+        }
+    };
+
+    const resetModalFields = () => {
+        setSelectedIP(null);
+        setSelectedBank(null);
+        setSelectedContragent(null);
+        setSelectedReceivedService(null);
+        setDogovorType('');
+        setDogovorTemplate('');
+        setNomer_dogovora('');
+        setDate_dogovora_propis('');
+        setDate_dogovor('');
+        setPredmet_dogovora_im('');
+        setPredmet_dogovora_rod('');
+        setStoimost_dogovor('');
+        setStoimost_dogovor_propis('');
+        setStoimost_dogovor_propis_akt('');
+        setData_dogovora('');
+        setIGK_dogovor('');
+    };
+
     const openModal = () => {
         setModalIsOpen(true);
     };
 
     const closeModal = () => {
+        resetModalFields();
         setModalIsOpen(false);
         setStep(1);
     };
 
     const nextStep = () => {
-        setStep(step + 1);
+        if (step === 5 && dogovorType !== '3') {
+            setStep(7); // Пропуск шага с получателями услуг для двухстороннего договора
+        } else {
+            setStep(step + 1);
+        }
     };
 
     const prevStep = () => {
-        setStep(step - 1);
+        if (step === 7 && dogovorType !== '3') {
+            setStep(5); // Возврат к шагу с контрагентом для двухстороннего договора
+        } else {
+            setStep(step - 1);
+        }
     };
 
     const renderStep = () => {
@@ -274,6 +372,7 @@ function Documents_Page({ children, ...props }) {
                                 </option>
                             ))}
                         </select>
+                        <button className={classes.button} onClick={() => setAddContragentModalIsOpen(true)}>Добавить контрагента</button>
                         <div className={classes.navigationButtons}>
                             <button className={classes.button} onClick={prevStep}>Назад</button>
                             <button className={classes.button} onClick={nextStep}>Далее</button>
@@ -281,24 +380,28 @@ function Documents_Page({ children, ...props }) {
                     </div>
                 );
             case 6:
-                return (
-                    <div className={classes.formGroup}>
-                        <label>Выберите получателя услуг:</label>
-                        <select onChange={(e) => setSelectedReceivedService(receivedServicesList.find(service => service.PolnoeNazvanie_contr_2 === e.target.value))}>
-                            <option value="">Выберите получателя услуг</option>
-                            {receivedServicesList.map(service => (
-                                <option key={service.PolnoeNazvanie_contr_2} value={service.PolnoeNazvanie_contr_2}>
-                                    {service.PolnoeNazvanie_contr_2}
-                                </option>
-                            ))}
-                        </select>
-                        <button className={classes.button} onClick={() => setAddReceivedServiceModalIsOpen(true)}>Добавить получателя услуг</button>
-                        <div className={classes.navigationButtons}>
-                            <button className={classes.button} onClick={prevStep}>Назад</button>
-                            <button className={classes.button} onClick={nextStep}>Далее</button>
+                if (dogovorType === '3') {
+                    return (
+                        <div className={classes.formGroup}>
+                            <label>Выберите получателя услуг:</label>
+                            <select onChange={(e) => setSelectedReceivedService(receivedServicesList.find(service => service.PolnoeNazvanie_contr_2 === e.target.value))}>
+                                <option value="">Выберите получателя услуг</option>
+                                {receivedServicesList.map(service => (
+                                    <option key={service.PolnoeNazvanie_contr_2} value={service.PolnoeNazvanie_contr_2}>
+                                        {service.PolnoeNazvanie_contr_2}
+                                    </option>
+                                ))}
+                            </select>
+                            <button className={classes.button} onClick={() => setAddReceivedServiceModalIsOpen(true)}>Добавить получателя услуг</button>
+                            <div className={classes.navigationButtons}>
+                                <button className={classes.button} onClick={prevStep}>Назад</button>
+                                <button className={classes.button} onClick={nextStep}>Далее</button>
+                            </div>
                         </div>
-                    </div>
-                );
+                    );
+                } else {
+                    return null;
+                }
             case 7:
                 return (
                     <div className={classes.formGroup}>
@@ -348,7 +451,7 @@ function Documents_Page({ children, ...props }) {
             >
                 <div className={classes.modalTitle}>Создание документа</div>
                 {renderStep()}
-                <button className={classes.closeButton} onClick={closeModal}>Закрыть</button>
+                <button className={classes.closeButton} onClick={closeModal}>Х</button>
             </Modal>
 
             <Modal
@@ -544,6 +647,202 @@ function Documents_Page({ children, ...props }) {
                     />
                     <button className={classes.button} onClick={handleAddReceivedService}>Добавить</button>
                     <button className={classes.button} onClick={() => setAddReceivedServiceModalIsOpen(false)}>Отмена</button>
+                </div>
+            </Modal>
+
+            <Modal
+                isOpen={addContragentModalIsOpen}
+                onRequestClose={() => setAddContragentModalIsOpen(false)}
+                className={classes.modal_add_info}
+                contentLabel="Добавить контрагента"
+            >
+                <div className={classes.modalTitle}>Добавить контрагента</div>
+                <div className={classes.formGroup}>
+                    <input
+                        type="text"
+                        placeholder="Полное наименование"
+                        value={newContragent.PolnoeNazvanie_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, PolnoeNazvanie_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Сокращенное наименование"
+                        value={newContragent.SocrNazvanie_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, SocrNazvanie_contr_1: e.target.value })}
+                    />
+                    <label>
+                        Основание
+                        <select
+                            value={newContragent.Osnovanie_contr_1}
+                            onChange={(e) => setNewContragent({ ...newContragent, Osnovanie_contr_1: e.target.value })}
+                        >
+                            <option value="Устав">Устав</option>
+                            <option value="ИП">ИП</option>
+                            <option value="Самозанятый">Самозанятый</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Печать
+                        <select
+                            value={newContragent.Pechat_contr_1}
+                            onChange={(e) => setNewContragent({ ...newContragent, Pechat_contr_1: e.target.value })}
+                        >
+                            <option value="false">Нет</option>
+                            <option value="М.П.">Да</option>
+                        </select>
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Должность"
+                        value={newContragent.Dolzhnost_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, Dolzhnost_contr_1: e.target.value })}
+                    />
+                    <label>
+                        Пол
+                        <select
+                            value={newContragent.genderContr}
+                            onChange={(e) => setNewContragent({ ...newContragent, genderContr: e.target.value })}
+                        >
+                            <option value="Мужской">Мужской</option>
+                            <option value="Женский">Женский</option>
+                        </select>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="ФИО"
+                        value={newContragent.fioContr}
+                        onChange={(e) => setNewContragent({ ...newContragent, fioContr: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Должность и ФИО (в род. падеже)"
+                        value={newContragent.Dolzhnost_FIO_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, Dolzhnost_FIO_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="И.О. Фамилия"
+                        value={newContragent.IO_F_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, IO_F_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Паспорт Серия"
+                        value={newContragent.passport_seria_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, passport_seria_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Паспорт номер"
+                        value={newContragent.passport_nomer_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, passport_nomer_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Адрес"
+                        value={newContragent.Adress_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, Adress_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ИНН"
+                        value={newContragent.INN_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, INN_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="КПП"
+                        value={newContragent.KPP_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, KPP_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКТМО"
+                        value={newContragent.OKTMO_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OKTMO_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКАТО"
+                        value={newContragent.OKATO_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OKATO_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКПО"
+                        value={newContragent.OKPO_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OKPO_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКОПФ"
+                        value={newContragent.OKOPF_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OKOPF_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОГРН"
+                        value={newContragent.OGRN_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OGRN_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОГРНИП"
+                        value={newContragent.OGRNIP_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OGRNIP_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Л/СЧ"
+                        value={newContragent.L_SCH_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, L_SCH_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Р/СЧ"
+                        value={newContragent.R_SCH_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, R_SCH_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="К/СЧ"
+                        value={newContragent.K_SCH_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, K_SCH_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Наименование банка"
+                        value={newContragent.Bank_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, Bank_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="БИК банка"
+                        value={newContragent.BIK_banka_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, BIK_banka_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКОГУ"
+                        value={newContragent.OKOGU_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, OKOGU_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="E-mail"
+                        value={newContragent.email_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, email_contr_1: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Телефон"
+                        value={newContragent.tel_contr_1}
+                        onChange={(e) => setNewContragent({ ...newContragent, tel_contr_1: e.target.value })}
+                    />
+                    <button className={classes.button} onClick={handleAddContragent}>Добавить</button>
+                    <button className={classes.button} onClick={() => setAddContragentModalIsOpen(false)}>Отмена</button>
                 </div>
             </Modal>
 
