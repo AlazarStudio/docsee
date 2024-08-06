@@ -155,6 +155,7 @@ function Documents_Page({ children, ...props }) {
             alert(`Документ сгенерирован: ${filename}`);
             setModalIsOpen(false);
 
+            resetModalFields();
         } catch (error) {
             console.error("Ошибка при генерации документа", error);
             alert("Ошибка при генерации документа");
