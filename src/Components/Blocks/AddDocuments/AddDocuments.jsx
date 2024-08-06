@@ -7,9 +7,11 @@ Modal.setAppElement('#root');
 function Documents_Page({ children, ...props }) {
     const [ipList, setIpList] = useState([]);
     const [contragentList, setContragentList] = useState([]);
+    const [receivedServicesList, setReceivedServicesList] = useState([]);
     const [selectedIP, setSelectedIP] = useState(null);
     const [selectedBank, setSelectedBank] = useState(null);
     const [selectedContragent, setSelectedContragent] = useState(null);
+    const [selectedReceivedService, setSelectedReceivedService] = useState(null);
 
     const [dogovorType, setDogovorType] = useState('');
     const [dogovorTemplate, setDogovorTemplate] = useState('');
@@ -25,10 +27,41 @@ function Documents_Page({ children, ...props }) {
     const [IGK_dogovor, setIGK_dogovor] = useState('');
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [addReceivedServiceModalIsOpen, setAddReceivedServiceModalIsOpen] = useState(false);
     const [step, setStep] = useState(1);
 
-    // Новое состояние для хранения данных о созданном документе
-    const [documentData, setDocumentData] = useState(null);
+    const [documents, setDocuments] = useState([]);
+
+    const [newReceivedService, setNewReceivedService] = useState({
+        PolnoeNazvanie_contr_2: '',
+        SocrNazvanie_contr_2: '',
+        Osnovanie_contr_2: 'Устава',
+        Pechat_contr_2: 'false',
+        Dolzhnost_contr_2: '',
+        fioContr: '',
+        Dolzhnost_FIO_contr_2: '',
+        IO_F_contr_2: '',
+        passport_seria_contr_2: '',
+        passport_nomer_contr_2: '',
+        Adress_contr_2: '',
+        INN_contr_2: '',
+        KPP_contr_2: '',
+        OKTMO_contr_2: '',
+        OKATO_contr_2: '',
+        OKPO_contr_2: '',
+        OKOPF_contr_2: '',
+        OGRN_contr_2: '',
+        OGRNIP_contr_2: '',
+        L_SCH_contr_2: '',
+        R_SCH_contr_2: '',
+        K_SCH_contr_2: '',
+        Bank_contr_2: '',
+        BIK_banka_contr_2: '',
+        OKOGU_contr_2: '',
+        email_contr_2: '',
+        tel_contr_2: '',
+        genderContr: 'Мужской'
+    });
 
     useEffect(() => {
         const loadIpData = async () => {
@@ -41,13 +74,25 @@ function Documents_Page({ children, ...props }) {
             setContragentList(response.data);
         };
 
+        const loadDocumentsData = async () => {
+            const response = await axios.get('http://localhost:3000/db/documents.json');
+            setDocuments(response.data);
+        };
+
+        const loadReceivedServicesData = async () => {
+            const response = await axios.get('http://localhost:3000/db/receivedServices.json');
+            setReceivedServicesList(response.data);
+        };
+
         loadIpData();
         loadContragentData();
+        loadDocumentsData();
+        loadReceivedServicesData();
     }, []);
 
     const handleGenerateDocument = async () => {
-        if (!selectedIP || !selectedContragent || !selectedBank) {
-            alert("Пожалуйста, выберите ИП, банк и контрагента.");
+        if (!selectedIP || !selectedContragent || !selectedBank || (dogovorType === '3' && !selectedReceivedService)) {
+            alert("Пожалуйста, заполните все необходимые поля.");
             return;
         }
 
@@ -66,19 +111,63 @@ function Documents_Page({ children, ...props }) {
             IGK_dogovor,
             ...selectedIP,
             ...selectedContragent,
-            ...selectedBank
+            ...selectedBank,
+            ...(dogovorType === '3' && { ...selectedReceivedService })
         };
+
+        console.log(data);
 
         try {
             const response = await axios.post('http://localhost:3000/generate', { data });
             const filename = response.data;
-            alert(`Документ сгенерирован: ${filename}`);
 
-            // Обновление состояния documentData
-            setDocumentData({ filename, ...data });
+            setDocuments(prevDocuments => [...prevDocuments, { filename, ...data }]);
+            alert(`Документ сгенерирован: ${filename}`);
+            setModalIsOpen(false);
+
         } catch (error) {
             console.error("Ошибка при генерации документа", error);
             alert("Ошибка при генерации документа");
+        }
+    };
+
+    const handleAddReceivedService = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/add-receivedServices', { data: newReceivedService });
+            setReceivedServicesList(prevList => [...prevList, newReceivedService]);
+            setNewReceivedService({
+                PolnoeNazvanie_contr_2: '',
+                SocrNazvanie_contr_2: '',
+                Osnovanie_contr_2: 'Устава',
+                Pechat_contr_2: 'false',
+                Dolzhnost_contr_2: '',
+                fioContr: '',
+                Dolzhnost_FIO_contr_2: '',
+                IO_F_contr_2: '',
+                passport_seria_contr_2: '',
+                passport_nomer_contr_2: '',
+                Adress_contr_2: '',
+                INN_contr_2: '',
+                KPP_contr_2: '',
+                OKTMO_contr_2: '',
+                OKATO_contr_2: '',
+                OKPO_contr_2: '',
+                OKOPF_contr_2: '',
+                OGRN_contr_2: '',
+                OGRNIP_contr_2: '',
+                L_SCH_contr_2: '',
+                R_SCH_contr_2: '',
+                K_SCH_contr_2: '',
+                Bank_contr_2: '',
+                BIK_banka_contr_2: '',
+                OKOGU_contr_2: '',
+                email_contr_2: '',
+                tel_contr_2: '',
+                genderContr: 'Мужской'
+            });
+            setAddReceivedServiceModalIsOpen(false);
+        } catch (error) {
+            console.error('Error adding received service:', error);
         }
     };
 
@@ -121,9 +210,7 @@ function Documents_Page({ children, ...props }) {
                         <label>Шаблон договора:</label>
                         <select onChange={(e) => setDogovorTemplate(e.target.value)} value={dogovorTemplate}>
                             <option value="">Выберите шаблон договора</option>
-                            <option value="шаблон1">Шаблон 1</option>
-                            <option value="шаблон2">Шаблон 2</option>
-                            <option value="шаблон3">Шаблон 3</option>
+                            <option value="complex">Шаблон комплексные</option>
                         </select>
                         <div className={classes.navigationButtons}>
                             <button className={classes.button} onClick={prevStep}>Назад</button>
@@ -196,6 +283,25 @@ function Documents_Page({ children, ...props }) {
             case 6:
                 return (
                     <div className={classes.formGroup}>
+                        <label>Выберите получателя услуг:</label>
+                        <select onChange={(e) => setSelectedReceivedService(receivedServicesList.find(service => service.PolnoeNazvanie_contr_2 === e.target.value))}>
+                            <option value="">Выберите получателя услуг</option>
+                            {receivedServicesList.map(service => (
+                                <option key={service.PolnoeNazvanie_contr_2} value={service.PolnoeNazvanie_contr_2}>
+                                    {service.PolnoeNazvanie_contr_2}
+                                </option>
+                            ))}
+                        </select>
+                        <button className={classes.button} onClick={() => setAddReceivedServiceModalIsOpen(true)}>Добавить получателя услуг</button>
+                        <div className={classes.navigationButtons}>
+                            <button className={classes.button} onClick={prevStep}>Назад</button>
+                            <button className={classes.button} onClick={nextStep}>Далее</button>
+                        </div>
+                    </div>
+                );
+            case 7:
+                return (
+                    <div className={classes.formGroup}>
                         <label>Номер договора:</label>
                         <input type="text" value={Nomer_dogovora} onChange={(e) => setNomer_dogovora(e.target.value)} />
                         <label>Дата договора (прописью):</label>
@@ -233,7 +339,7 @@ function Documents_Page({ children, ...props }) {
                 <h2>Документы</h2>
                 <button className={classes.button} onClick={openModal}>Создать документ</button>
             </div>
-            
+
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -245,12 +351,214 @@ function Documents_Page({ children, ...props }) {
                 <button className={classes.closeButton} onClick={closeModal}>Закрыть</button>
             </Modal>
 
-            {documentData && (
-                <div className={classes.documentData}>
-                    <h3>Данные о созданном документе</h3>
-                    <pre>{JSON.stringify(documentData, null, 2)}</pre>
+            <Modal
+                isOpen={addReceivedServiceModalIsOpen}
+                onRequestClose={() => setAddReceivedServiceModalIsOpen(false)}
+                className={classes.modal_add_info}
+                contentLabel="Добавить получателя услуг"
+            >
+                <div className={classes.modalTitle}>Добавить получателя услуг</div>
+                <div className={classes.formGroup}>
+                    <input
+                        type="text"
+                        placeholder="Полное наименование"
+                        value={newReceivedService.PolnoeNazvanie_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, PolnoeNazvanie_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Сокращенное наименование"
+                        value={newReceivedService.SocrNazvanie_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, SocrNazvanie_contr_2: e.target.value })}
+                    />
+                    <label>
+                        Основание
+                        <select
+                            value={newReceivedService.Osnovanie_contr_2}
+                            onChange={(e) => setNewReceivedService({ ...newReceivedService, Osnovanie_contr_2: e.target.value })}
+                        >
+                            <option value="Устава">Устава</option>
+                            <option value="ИП">ИП</option>
+                            <option value="Самозанятый">Самозанятый</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Печать
+                        <select
+                            value={newReceivedService.Pechat_contr_2}
+                            onChange={(e) => setNewReceivedService({ ...newReceivedService, Pechat_contr_2: e.target.value })}
+                        >
+                            <option value="false">Нет</option>
+                            <option value="М.П.">Да</option>
+                        </select>
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Должность"
+                        value={newReceivedService.Dolzhnost_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, Dolzhnost_contr_2: e.target.value })}
+                    />
+                    <label>
+                        Пол
+                        <select
+                            value={newReceivedService.genderContr}
+                            onChange={(e) => setNewReceivedService({ ...newReceivedService, genderContr: e.target.value })}
+                        >
+                            <option value="Мужской">Мужской</option>
+                            <option value="Женский">Женский</option>
+                        </select>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="ФИО"
+                        value={newReceivedService.fioContr}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, fioContr: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Должность и ФИО (в род. падеже)"
+                        value={newReceivedService.Dolzhnost_FIO_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, Dolzhnost_FIO_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="И.О. Фамилия"
+                        value={newReceivedService.IO_F_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, IO_F_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Паспорт Серия"
+                        value={newReceivedService.passport_seria_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, passport_seria_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Паспорт номер"
+                        value={newReceivedService.passport_nomer_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, passport_nomer_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Адрес"
+                        value={newReceivedService.Adress_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, Adress_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ИНН"
+                        value={newReceivedService.INN_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, INN_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="КПП"
+                        value={newReceivedService.KPP_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, KPP_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКТМО"
+                        value={newReceivedService.OKTMO_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OKTMO_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКАТО"
+                        value={newReceivedService.OKATO_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OKATO_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКПО"
+                        value={newReceivedService.OKPO_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OKPO_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКОПФ"
+                        value={newReceivedService.OKOPF_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OKOPF_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОГРН"
+                        value={newReceivedService.OGRN_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OGRN_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОГРНИП"
+                        value={newReceivedService.OGRNIP_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OGRNIP_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Л/СЧ"
+                        value={newReceivedService.L_SCH_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, L_SCH_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Р/СЧ"
+                        value={newReceivedService.R_SCH_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, R_SCH_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="К/СЧ"
+                        value={newReceivedService.K_SCH_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, K_SCH_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Наименование банка"
+                        value={newReceivedService.Bank_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, Bank_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="БИК банка"
+                        value={newReceivedService.BIK_banka_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, BIK_banka_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="ОКОГУ"
+                        value={newReceivedService.OKOGU_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, OKOGU_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="E-mail"
+                        value={newReceivedService.email_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, email_contr_2: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Телефон"
+                        value={newReceivedService.tel_contr_2}
+                        onChange={(e) => setNewReceivedService({ ...newReceivedService, tel_contr_2: e.target.value })}
+                    />
+                    <button className={classes.button} onClick={handleAddReceivedService}>Добавить</button>
+                    <button className={classes.button} onClick={() => setAddReceivedServiceModalIsOpen(false)}>Отмена</button>
                 </div>
-            )}
+            </Modal>
+
+            <div className={classes.documentsList}>
+                <ul>
+                    {documents.map((doc, index) => (
+                        <li key={index}>
+                            <span>{doc.filename}</span>
+                            <a href={`http://localhost:3000/docs/${doc.filename}`} download>
+                                <button className={classes.downloadButton}>Скачать</button>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }

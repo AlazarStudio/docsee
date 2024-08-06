@@ -28,8 +28,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 600px;
+    width: 800px;
     background-color: white;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -64,7 +63,6 @@
 .formGroup label {
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
 .formGroup select,
@@ -101,4 +99,50 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+}
+
+.modal_add_info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.modal_add_info .formGroup input {
+    width: 49%;
+}
+
+.modal_add_info .formGroup label {
+    width: 49%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal_add_info .formGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 0;
+}
+
+.modal_add_info .formGroup .button {
+    padding: 10px 20px;
+    background-color: #A53F80;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.3s ease-in-out;
+    margin-top: 20px;
+}
+
+.modal_add_info .formGroup .button:hover {
+    opacity: 1;
 }

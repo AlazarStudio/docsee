@@ -31,8 +31,8 @@ const AddContragent = () => {
     const [email_contr_1, setEmail_contr_1] = useState('');
     const [tel_contr_1, setTel_contr_1] = useState('');
     const [genderContr, setGenderContr] = useState('Мужской');
-    const [passportNomerContr, setPassportNomerContr] = useState('');
-    const [passportSeriaContr, setPassportSeriaContr] = useState('');
+    const [passport_nomer_contr_1, setpassport_nomer_contr_1] = useState('');
+    const [passport_seria_contr_1, setpassport_seria_contr_1] = useState('');
     const [fioContr, setFioContr] = useState('');
 
     const [isAddContrModalOpen, setIsAddContrModalOpen] = useState(false);
@@ -63,8 +63,8 @@ const AddContragent = () => {
                 ...(fioContr && { fioContr }),
                 ...(Dolzhnost_FIO_contr_1 && { Dolzhnost_FIO_contr_1 }),
                 ...(IO_F_contr_1 && { IO_F_contr_1 }),
-                ...(passportSeriaContr && { passportSeriaContr }),
-                ...(passportNomerContr && { passportNomerContr }),
+                ...(passport_seria_contr_1 && { passport_seria_contr_1 }),
+                ...(passport_nomer_contr_1 && { passport_nomer_contr_1 }),
                 ...(Adress_contr_1 && { Adress_contr_1 }),
                 ...(INN_contr_1 && { INN_contr_1 }),
                 ...(KPP_contr_1 && { KPP_contr_1 }),
@@ -96,8 +96,8 @@ const AddContragent = () => {
                     setFioContr('');
                     setDolzhnost_FIO_contr_1('');
                     setIO_F_contr_1('');
-                    setPassportSeriaContr('');
-                    setPassportNomerContr('');
+                    setpassport_seria_contr_1('');
+                    setpassport_nomer_contr_1('');
                     setAdress_contr_1('');
                     setINN_contr_1('');
                     setKPP_contr_1('');
@@ -161,8 +161,8 @@ const AddContragent = () => {
                                 {contr.fioContr && <p><strong>ФИО:</strong> {contr.fioContr}</p>}
                                 {contr.Dolzhnost_FIO_contr_1 && <p><strong>Должность и ФИО (в род. падеже):</strong> {contr.Dolzhnost_FIO_contr_1}</p>}
                                 {contr.IO_F_contr_1 && <p><strong>И.О. Фамилия:</strong> {contr.IO_F_contr_1}</p>}
-                                {contr.passportSeriaContr && <p><strong>Паспорт Серия:</strong> {contr.passportSeriaContr}</p>}
-                                {contr.passportNomerContr && <p><strong>Паспорт Номер:</strong> {contr.passportNomerContr}</p>}
+                                {contr.passport_seria_contr_1 && <p><strong>Паспорт Серия:</strong> {contr.passport_seria_contr_1}</p>}
+                                {contr.passport_nomer_contr_1 && <p><strong>Паспорт Номер:</strong> {contr.passport_nomer_contr_1}</p>}
                                 {contr.Adress_contr_1 && <p><strong>Адрес:</strong> {contr.Adress_contr_1}</p>}
                                 {contr.INN_contr_1 && <p><strong>ИНН:</strong> {contr.INN_contr_1}</p>}
                                 {contr.KPP_contr_1 && <p><strong>КПП:</strong> {contr.KPP_contr_1}</p>}
@@ -264,14 +264,14 @@ const AddContragent = () => {
                             <input
                                 type="text"
                                 placeholder="Паспорт Серия (для самозанятых)"
-                                value={passportSeriaContr}
-                                onChange={(e) => setPassportSeriaContr(e.target.value)}
+                                value={passport_seria_contr_1}
+                                onChange={(e) => setpassport_seria_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
                                 placeholder="Паспорт номер (для самозанятых)"
-                                value={passportNomerContr}
-                                onChange={(e) => setPassportNomerContr(e.target.value)}
+                                value={passport_nomer_contr_1}
+                                onChange={(e) => setpassport_nomer_contr_1(e.target.value)}
                             />
                             <input
                                 type="text"
