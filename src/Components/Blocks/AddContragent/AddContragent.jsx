@@ -125,8 +125,6 @@ const AddContragent = () => {
             .catch(error => console.error('Error fetching IP data:', error));
     }, []);
 
-    console.log(contrData)
-
     return (
         <div className={classes.main}>
             <div className={classes.main_name}>
