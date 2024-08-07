@@ -18,7 +18,8 @@ function App() {
           <Route path="/ip" element={<Ip_Page />} />
           <Route path="/contractors" element={<Contagent_Page />} />
           <Route path="/receivedServices" element={<ReceivedServices />} />
-          <Route path="/documents" element={<Documents_Page />} />
+          <Route path="/documents" element={<Main_Page />} />
+          <Route path="/addDocument" element={<Documents_Page />} />
           <Route path="*" element={<Non_Found_Page />} />
         </Route>
       </Routes>

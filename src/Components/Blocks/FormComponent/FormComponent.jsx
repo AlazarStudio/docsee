@@ -8,8 +8,8 @@ const fields = {
     position: { label: "Должность", placeholder: "Директор" },
     shortFIO: { label: "Сокращенное ФИО", placeholder: "Д.К. Хубиева" },
     positionAndFIO: { label: "Должность и ФИО (в род. падеже)", placeholder: "Директора Хубиевой Дианы Казимовны" },
-    basis: { label: "Основание", options: ["Гос", "ИП", "Самозанятый"] },
-    gender: { label: "Пол", options: ["Мужской", "Женский"] },
+    basis: { label: "Основание", options: ["Гос", "ИП", "Самозанятый"], placeholder: "Выберите основание" },
+    gender: { label: "Пол", options: ["Мужской", "Женский"], placeholder: "Выберите пол" },
     bank: { label: "Банк", placeholder: "ОТДЕЛЕНИЕ-НБ ПО КАРАЧАЕВО-ЧЕРКЕССКОЙ РЕСПУБЛИКЕ ЮЖНОГО ГЛАВНОГО УПРАВЛЕНИЯ ЦЕНТРАЛЬНОГО БАНКА РОССИЙСКОЙ ФЕДЕРАЦИИ" },
     bik: { label: "БИК", placeholder: "019133001" },
     email: { label: "E-mail", placeholder: "reception@moibiz09.ru" },
@@ -17,10 +17,13 @@ const fields = {
     address: { label: "Адрес местонахождения", placeholder: "369000, КЧР, г. Черкесск, ул. Ленина, дом 53." },
     inn: { label: "ИНН", placeholder: "0900001180" },
     kpp: { label: "КПП", placeholder: "090001001" },
+    bankInn: { label: "ИНН банка", placeholder: "7707083893" },
+    rSchet: { label: "Р/с", placeholder: "40802810360310007883" },
+    kSchet: { label: "К/с", placeholder: "30101810907020000615" },
     ogrn: { label: "ОГРН", placeholder: "1210900002950" },
     treasuryAccountNumber: { label: "Номер казначейского счета", placeholder: "03226643910000007900" },
     singleTreasuryAccount: { label: "Единый казначейский счет", placeholder: "40102810245370000078" },
-    stamp: { label: "Печать", options: ["М.П.", "Нет"] },
+    stamp: { label: "Печать", options: ["Да", "Нет"], placeholder: "Выберите печать" },
     passportSeries: { label: "Паспорт Серия (для самозанятых)", placeholder: "2132" },
     passportNumber: { label: "Паспорт номер (для самозанятых)", placeholder: "2133321" },
     ogrnip: { label: "ОГРНИП (для ИП)", placeholder: "1210900002950" },
@@ -32,7 +35,7 @@ const fields = {
     ls: { label: "л/сч (для гос)", placeholder: "41796052510" }
 };
 
-function FormComponent({ endpoint, onSuccess, open, onClose }) {
+function FormComponent({ endpoint, onSuccess, open, onClose, title }) {
     const [formData, setFormData] = useState(Object.keys(fields).reduce((acc, key) => {
         acc[key] = "";
         return acc;
@@ -46,9 +49,14 @@ function FormComponent({ endpoint, onSuccess, open, onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:3000/${endpoint}`, { data: formData });
-            onSuccess(formData);
-            onClose(); 
+            const dataToSend = {
+                ...formData,
+                titleOrg: `${formData.fullName} (${formData.bank})`
+            };
+
+            await axios.post(`http://localhost:3000/${endpoint}`, { data: dataToSend });
+            onSuccess(dataToSend);
+            onClose(); // Закрыть модальное окно после успешного добавления
         } catch (error) {
             console.error("Ошибка запроса", error);
         }
@@ -56,12 +64,12 @@ function FormComponent({ endpoint, onSuccess, open, onClose }) {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Добавить данные </DialogTitle>
+            <DialogTitle>Добавить данные для {title}</DialogTitle>
             <DialogContent>
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
                     <Grid container spacing={2}>
                         {Object.keys(fields).map((key) => (
-                            <Grid item xs={12} sm={0} key={key}>
+                            <Grid item xs={12} key={key}>
                                 {fields[key].options ? (
                                     <FormControl fullWidth>
                                         <InputLabel shrink>{fields[key].label}</InputLabel>
@@ -70,7 +78,9 @@ function FormComponent({ endpoint, onSuccess, open, onClose }) {
                                             value={formData[key]}
                                             onChange={handleChange}
                                             label={fields[key].label}
+                                            displayEmpty
                                         >
+                                            <MenuItem value="" disabled>{fields[key].placeholder}</MenuItem>
                                             {fields[key].options.map((option, index) => (
                                                 <MenuItem key={index} value={option}>
                                                     {option}
