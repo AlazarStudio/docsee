@@ -853,7 +853,7 @@ function Documents_Page({ children, ...props }) {
                         <li key={index}>
                             <span>{doc.filename}</span>
                             <a href={`http://localhost:3000/docs/${doc.filename}`} download>
-                                <button className={classes.downloadButton}>Скачать</button>
+                                <button className={classes.downloadButton}>Скачать договор</button>
                             </a>
                         </li>
                     ))}
